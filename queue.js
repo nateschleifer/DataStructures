@@ -1,5 +1,5 @@
 // FIFO, enqueue(push), dequeue(shift)
-// O(n): dequeue, O(1): enqueue
+// O(1): enqueue, O(n): dequeue
 // process orderly: CPU task schedule, printer
 // to instantiate: const queue = new Queue();
 

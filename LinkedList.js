@@ -1,3 +1,7 @@
+// linear O(n) search
+// elements can be inserted or deleted without reorganization of the entire list
+// instantiate with: const ll = new LinkedList();
+TODO: // add iterator to allow for-of loop
 class Node {
     constructor(data, next=null) {
         this.data = data;
@@ -65,12 +69,6 @@ class LinkedList {
         previous.next = node;
 
         this.size++;
-
-
-
-
-
-
     }
 
     // Get at index
@@ -92,7 +90,7 @@ class LinkedList {
         }
         return null;
     }
-    // Remode at index
+    // Remove at index
     removeAt(index) {
         if(index < 0 || index > this.size -1) {
             console.log("index out of range");
@@ -117,6 +115,32 @@ class LinkedList {
             this.size--;
         }
     }
+
+    // Search result false or if true then index
+    searchList(element) {
+        let current = this.head;
+        let index = 0;
+        let count = [];
+
+        if (this.size === 0) {
+            return false;
+        } else {
+            while (index < this.size) {
+                if (current.data === element) {
+                    count.push(index);
+                }
+                current = current.next;
+                index++;
+            }
+            if (count.length !== 0) {
+                return count;
+            }
+        }
+        if(count.length === 0) {
+            return false;
+        }
+    }
+
     // Clear list
     clearList() {
         this.head = null;
@@ -124,7 +148,7 @@ class LinkedList {
     }
 
     // Print list data
-    printListData() {
+    print() {
         let current = this.head;
 
         while(current) {
@@ -133,15 +157,3 @@ class LinkedList {
         }
     }
 }
-
-const ll = new LinkedList();
-ll.insertFirst(200);
-ll.insertFirst(300);
-ll.insertFirst(400);
-ll.insertLast(500);
-ll.insertAt(600, 1);
-
-ll.printListData();
-//ll.getAt(4);
-ll.clearList();
-ll.printListData();

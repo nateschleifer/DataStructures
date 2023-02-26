@@ -100,7 +100,7 @@ class LinkedList {
         return null;
     }
     // Remove at index
-    removeAt(index) {
+    removeAt(index=0) { // if no arguement given to removeAt: remove from front
         if(index < 0 || index >= this.size) {
             return null;
         } 
@@ -215,3 +215,5 @@ class LinkedList {
         }
     }
 }
+
+module.exports = LinkedList;

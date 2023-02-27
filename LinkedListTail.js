@@ -93,30 +93,14 @@ class Node {
         console.log("List is empty");
       } else {
         let curr = this.head;
-        let list = "";
         while (curr) {
-          list += `${curr.value}->`;
+          console.log(curr.value);
           curr = curr.next;
         }
-        console.log(list);
       }
     }
   }
   
   module.exports = LinkedList;
-  
-  /** Uncomment when testing only this file */
-  /**
-  const list = new LinkedList();
-  list.append(1);
-  list.append(2);
-  list.append(3);
-  list.prepend(0);
-  list.print();
-  console.log(list.getSize());
-  list.removeFromFront();
-  list.print();
-  list.removeFromEnd();
-  list.print();
-  */
+
   

@@ -1,14 +1,12 @@
-// linear O(n) search
-// elements can be inserted or deleted without reorganization of the entire list
-// elements are not hashed; they must be searched
-// same applications as stacks and queues; slide show
+// Elements can be added or removed without reorganization of entire structure
+// O(n) access time
+// elements can be inserted or deleted without reallocation or reorganization of entire structure
+// same applications as stacks and queues; slide show, undo/redo, etc.
 // instantiate with: const ll = new LinkedList();
-//TODO: // add iterator to allow for-of loop
-        //sort; change pointers(next)
-        // removeAllValue(value)
+// TODO: add iterator for allow for...of loop, sort, removeAllValues(value)
 class Node {
-    constructor(value, next=null) {
-        this.value = value;
+    constructor(data, next=null) {
+        this.data = data;
         this.next = next;
     }
 }
@@ -27,193 +25,181 @@ class LinkedList {
         return this.size;
     }
 
-    // Insert first node O(1)
-    prepend(value) {
-        this.head = new Node(value, this.head); // pushes first/null to n2
+    // Insert first node
+    prepend(data) {
+        this.head = new Node(data, this.head); // pushes first/null to n2
         this.size++;
     }
-    // Insert last node O(n)
-    append(value) {
-        const node = new Node(value);
-        let prev;
+    // Insert last node
+    append(data) {
+        let node = new Node(data);
+        let current;
 
         //if empty, make head
-        if (this.isEmpty()) {
+        if (!this.head) {
             this.head = node;
         }   else {
-                prev = this.head;
+                current = this.head;
 
-                while (prev.next) {
-                    prev = prev.next;
+                while (current.next) {
+                    current = current.next;
                 }
-                prev.next = node;
+                current.next = node;
         }
         this.size++;
     }
     // Insert at index
-    insert(value, index) {
+    insertAt(data, index) {
         // If index is out of range
-        if(index < 0 || index > this.size) {
+        if(index < 0 || index > this.size -1) {
             console.log("index is out of range");
             return;
         }
         
         // If first index
         if(index === 0) {
-            this.prepend(value);
-            return; // prepend() increments size
-        } else {
-            const node = new Node(value); // create new node outside of list
-
-            //Set prev points to head
-            let prev = this.head;
-            let i = 0;
-
-            while(i < index-1) {
-                prev = prev.next; // advance prev to before insertion index
-                i++;
-            }
-
-            node.next = prev.next; // new node points to node at current index
-            prev.next = node; // prev node points to new node closing list
-            this.size++;
+            this.prepend(data);
+            return;
         }
-    }
 
+        const node = new Node(data);
+        let current, previous;
+
+        //Set current to first
+        current = this.head;
+        let count = 0;
+
+        while(count < index) {
+            previous = current; // Node before index
+            count++;
+            current = current.next; // Node after index
+        }
+
+        node.next = current;
+        previous.next = node;
+
+        this.size++;
+    }
     // Get at index
     getAt(index) {
         let current = this.head;
         let count = 0;
         
-        if(index > this.size -1) {
+        if(index >= this.size || index < 0) {
             console.log("index out of range");
             return;
         }
 
         while (current) {
-            if (count == index) {
-                console.log(current.value);
+            if (count === index) {
+                console.log(current.data);
             }
             count++;
             current = current.next;
         }
         return null;
     }
-    // Remove at index
-    removeAt(index=0) { // if no arguement given to removeAt: remove from front
+    // Remode at index
+    removeAt(index) {
         if(index < 0 || index >= this.size) {
-            return null;
-        } 
-        let remv;
-        if(index === 0) {
-            remv = this.head;
-            this.head = this.head.next;
+            console.log("index out of range");
+            return;
         } else {
-            let prev = this.head;
-            let i = 1;
-            while (i < index) {
-                prev = prev.next;
-                i++;      
-            }
-            remv = prev.next;
-            prev.next = remv.next;
-        }
-        this.size--;
-        return remv.value;
-    }
 
-    removeValue(value) {
-        if(this.isEmpty()) {
-            return null;
-        }
-        if(this.head.value === value) {
-            this.head = this.head.next;
-            this.size--;
-            return value;
-        } else {
-            let prev = this.head;
-            while(prev.next !== null && prev.next.value !== value) {
-                prev = prev.next;
-            }
-            if(prev.next) {
-                const remv = prev.next;
-                prev.next = remv.next;
-                this.size--;
-                return value;
-            } 
-            return null;
-        }
-    }
-    // Search for value; return first index
-    search(value) {
-        if(this.isEmpty()) {
-            return -1;
-        }
-        let index = 0;
-        let current = this.head;
-        while(current) {
-            if(current.value === value) {
-                return index;
-            }
-            current = current.next;
-            index++;
-        } 
-        return -1;
-    }
-    // Search for all indexes of value
-    searchAll(value) {
-        let current = this.head;
-        let index = 0;
-        const count = [];
+            let current = this.head;
+            let previous;
+            let count = 0;
 
-        if(this.isEmpty()) {
-            return -1;
-        } else {
-            while (index < this.size) {
-                if (current.value === value) {
-                    count.push(index);
+            // Remove first
+            if(index === 0) {
+                this.head = current.next;
+            } else {
+                while (count < index) {
+                    count++;
+                    previous = current;
+                    current = current.next;
                 }
-                current = current.next;
-                index++;
+                previous.next = current.next;
             }
-            if (count.length !== 0) {
-                return count;
-            }
-        }
-        if(count.length === 0) {
-            return -1;
+            this.size--;
         }
     }
-
-    reverse() {
-        let prev = null;
-        let current = this.head;
-        while(current) {
-            let next = current.next;
-            current.next = prev;
-            prev = current;
-            current = next;
-        }
-        this.head = prev;
-    }
-
     // Clear list
     clearList() {
         this.head = null;
         this.size = 0;
     }
 
-    // Print list value
-    print() {
-        if(this.isEmpty()) {
-            console.log("Linked list is empty");
-        }
+    // Print list data
+    printListData() {
         let current = this.head;
+
         while(current) {
-            console.log(current.value);
+            console.log(current.data);
             current = current.next;
         }
     }
+
+    reverseList() {
+        let current = this.head;
+        let previous = null;
+        let nxt = null;
+
+        while(current) {
+            nxt = current.next;
+            current.next = previous; // 
+            previous = current;
+            current = nxt;
+        }
+
+        this.head = previous;
+    }
 }
 
-module.exports = LinkedList;
+const ll = new LinkedList();
+ll.append(200);
+ll.append(300);
+ll.append(400);
+ll.append(500);
+// ll.printListData();
+
+const ll2 = new LinkedList();
+ll2.append(100);
+ll2.append(200);
+ll2.append(300);
+ll2.append(600);
+ll2.append(700);
+ll2.append(800);
+// ll2.printListData();
+
+
+function mergeTwoLinkedLists(l1, l2) {
+    let merged = new LinkedList();
+    let current1 = l1.head;
+    let current2 = l2.head;
+
+    while(current1 && current2) {
+        if(current1.data < current2.data) {
+            merged.append(current1.data);
+            current1 = current1.next;
+        } else {
+            merged.append(current2.data);
+            current2 = current2.next;
+        }
+    }
+
+    while(current1) {
+        merged.append(current1.data);
+        current1 = current1.next;
+    }
+
+    while(current2) {
+        merged.append(current2.data);
+        current2 = current2.next;
+    }
+
+    return merged;
+    
+}
+
+mergeTwoLinkedLists(ll, ll2).printListData();

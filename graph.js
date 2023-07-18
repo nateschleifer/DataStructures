@@ -23,6 +23,21 @@ class Graph {
         this.adjacencyList[vertex2].add(vertex1); // add vertexes to each others sets as values
     }
 
+    removeEdge(vertex1, vertex2) {
+        this.adjacencyList[vertex1].delete(vertex2); // delete the adjacent vertex of
+        this.adjacencyList[vertex2].delete(vertex1); // this key in each others value set
+    }
+
+    removeVertex(vertex) {
+        if(!this.adjacencyList[vertex]) {
+            return;
+        } // for each vertex connected to this vertex(key) by an edge
+        for(let adjacentVertex of this.adjacencyList[vertex]) { 
+            this.removeEdge(vertex, adjacentVertex); // remove vertices from value set
+        }
+        delete this.adjacencyList[vertex]; // then delete this vertex(key)
+    }
+
     hasEdge(vertex1, vertex2) {
         return (
             this.adjacencyList[vertex1].has(vertex2) &&
